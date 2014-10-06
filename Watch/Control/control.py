@@ -24,17 +24,40 @@ __email__ = "julienbeaudaux@gmail.com"
 # consequencial damages or any damages whatsoever.
 
 import eZ430, dbus, time, math
+import sys, Tkinter
+import gui
+
+#Demo mode making the movement/fall calculations on the computer
+def demoMode():
+	#Start the GUI	
+	app = gui.windowControl(None)
+	app.mainloop()
+	
+	#Determine position and movement
+	"""while 1:
+		data = watch.read()
+		datalen = len(data)
+		if datalen > 2: #Test whether data is recorded or not.
+			print "x: %s\ty:%s\tz:%s"%(ord(data[0]),ord(data[1]),ord(data[2]))
+			app.drawCoordinates(ord(data[0]),ord(data[1]),ord(data[2]))
+		time.sleep(0.5)"""
+
+#Operational control mode that calls caretakers upon alert message
+def controlMode():
+	run=1
+
+	#while run == 1:
+	#	data = watch.read()
+	#	datalen = len(data)
+		#Test for incoming data
+		#Define alarm type
+		#Send email to caretakers
 
 #Wireless link init
-watch = eZ430.watch()
+#watch = eZ430.watch()
 
-x=0
-y=0
-z=0
+if len(sys.argv)>1 and sys.argv[1] == "demo":
+	demoMode()
+elif len(sys.argv)>1 and sys.argv[1] == "control":
+	controlMode()
 
-while 1:
-	data = watch.read()
-	datalen = len(data)
-	if datalen > 2:
-		print "x: %s\ty:%s\tz:%s"%(ord(data[0]),ord(data[1]),ord(data[2]))
-	time.sleep(1)
