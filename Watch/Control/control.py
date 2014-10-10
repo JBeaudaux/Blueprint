@@ -23,28 +23,26 @@ __email__ = "julienbeaudaux@gmail.com"
 # the Blue print project be liable for any special, indirect or
 # consequencial damages or any damages whatsoever.
 
+
 import eZ430, dbus, time, math
 import sys, Tkinter
 import gui
 
-#Demo mode making the movement/fall calculations on the computer
-def demoMode():
+
+# Demo mode displaying the watch sensed data for public advertisement
+def demoMode(extra):
 	#Start the GUI	
 	app = gui.windowControl(None)
 	app.mainloop()
-	
-	#Determine position and movement
-	"""while 1:
-		data = watch.read()
-		datalen = len(data)
-		if datalen > 2: #Test whether data is recorded or not.
-			print "x: %s\ty:%s\tz:%s"%(ord(data[0]),ord(data[1]),ord(data[2]))
-			app.drawCoordinates(ord(data[0]),ord(data[1]),ord(data[2]))
-		time.sleep(0.5)"""
 
-#Operational control mode that calls caretakers upon alert message
-def controlMode():
+
+
+# Operational control mode that calls caretakers upon alert message
+def controlMode(extra):
 	run=1
+
+	# Wireless link init
+	#watch = eZ430.watch()
 
 	#while run == 1:
 	#	data = watch.read()
@@ -53,11 +51,38 @@ def controlMode():
 		#Define alarm type
 		#Send email to caretakers
 
-#Wireless link init
-#watch = eZ430.watch()
 
-if len(sys.argv)>1 and sys.argv[1] == "demo":
-	demoMode()
-elif len(sys.argv)>1 and sys.argv[1] == "control":
-	controlMode()
+
+# Provides details on the control center
+def handleHelp(extra):
+	print '\nBlueprint watch control center'
+	print '==============================\n'
+	print 'The Blue print open smart-watch is designed to detect sudden health onsets (i.e. Falls and heart failures), thus enabling preventive measures to be taken or notifying caretakers for improved and quicker emergency response. The control center is meant as a relay between the watch and the caretakers, notifying them when needed, as well as a tool for displaying the capabilities of the watch.\n'
+	print 'Commands'
+	print '--------\n'
+	print 'control : In this mode, the control center handles the emergency messages sent by the watch and notifies caretakers through SMS/eMail;\n'
+	print 'demo : In this mode, the control center graphically displays the watch sensed data (i.e. movement, heart rate) and subsequent interpretations.\n'
+	#print 'Options'
+	#print '-------\n'
+
+
+
+command_map = {
+    'control': controlMode,
+    'demo': demoMode,
+    'help': handleHelp
+}
+
+
+if __name__ == '__main__':
+    if len(sys.argv) < 2:
+        print 'Usage: sudo python control.py COMMAND [options]'
+        sys.exit(-1)
+
+    command = sys.argv[1]
+    if command in command_map:
+        command_map[command](sys.argv[2:])
+    else:
+        print 'Command not supported: {}'.format(command)
+        sys.exit(-1)
 

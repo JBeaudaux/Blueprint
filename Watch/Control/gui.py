@@ -33,8 +33,8 @@ class windowControl(Tkinter.Tk):
 	runDemo = False
 	coord={'xaxis':0, 'yaxis':0, 'zaxis':0, 'acc':0}
 
-	precision=0.02	#time interval between samples (in sec)
-	iteration=0	#
+	precision=0.02	# Time interval between samples (in sec)
+	iteration=0	# Number of iterations from the first sample
 
 
 
@@ -47,7 +47,7 @@ class windowControl(Tkinter.Tk):
 
 
 	# Prints movement whenever activity is detected
-	def drawCoordinates(self, xaxis, yaxis, zaxis, prevx, prevy, prevz):
+	def drawCoordinates(self, xaxis, yaxis, zaxis, prevx, prevy, prevz, acc):
 		if self.iteration > 1200:
 			self.iteration = 0
 			self.canvas.delete("all")
@@ -55,12 +55,15 @@ class windowControl(Tkinter.Tk):
 		self.canvas.create_line(self.iteration, prevx, self.iteration+1, xaxis, fill='blue')
 		self.canvas.create_line(self.iteration, prevy, self.iteration+1, yaxis, fill='red')
 		self.canvas.create_line(self.iteration, prevz, self.iteration+1, zaxis, fill='green')
+		#self.canvas.create_oval(self.iteration, acc, self.iteration+1, acc+1, outline='black', fill='black')
 
 
 
+	# Calculates acceleration to detect fall patterns
 	def detectFall(self, xaxis, yaxis, zaxis, prevx, prevy, prevz):
 		norm = math.sqrt((xaxis*xaxis)+(yaxis*yaxis)+(zaxis*zaxis))
 		print "X %d\t Y %d\t Z %d\t N %d"%(xaxis, yaxis, zaxis, norm)
+		return norm
 
 
 
@@ -93,11 +96,13 @@ class windowControl(Tkinter.Tk):
 				finz = (finz-50)*2
 
 				# Calculate acceleration
-				self.detectFall(finx, finy, finz, prevx, prevy, prevz)
+				norm = self.detectFall(finx, finy, finz, prevx, prevy, prevz)
 
 				self.iteration += 1
 
-				self.drawCoordinates(finx, finy, finz, prevx, prevy, prevz)
+				self.drawCoordinates(finx, finy, finz, prevx, prevy, prevz, norm)
+				# TODO Make possibility to record current Demo (or play it)
+				#self.recordDemo(finx, finy, finz, prevx, prevy, prevz, norm)
 
 			Timer(self.precision, self.calculateMovement, ()).start()
 
