@@ -26,15 +26,18 @@ __email__ = "julienbeaudaux@gmail.com"
 import Tkinter
 import time
 from threading import Timer
-import eZ430, dbus, time, math
+import eZ430, dbus, time, math, os
 
 class windowControl(Tkinter.Tk):
 
-	runDemo = False
+	runDemo = 0	#0=inactive ; 1=live ; 2=recorded
+	recordDemo = False
+
 	coord={'xaxis':0, 'yaxis':0, 'zaxis':0, 'acc':0}
 
 	precision=0.02	# Time interval between samples (in sec)
 	iteration=0	# Number of iterations from the first sample
+	windowSize = 1200
 
 
 
@@ -48,13 +51,12 @@ class windowControl(Tkinter.Tk):
 
 	# Prints movement whenever activity is detected
 	def drawCoordinates(self, xaxis, yaxis, zaxis, prevx, prevy, prevz, acc):
-		if self.iteration > 1200:
-			self.iteration = 0
+		if self.iteration%self.windowSize == 0:
 			self.canvas.delete("all")
 
-		self.canvas.create_line(self.iteration, prevx, self.iteration+1, xaxis, fill='blue')
-		self.canvas.create_line(self.iteration, prevy, self.iteration+1, yaxis, fill='red')
-		self.canvas.create_line(self.iteration, prevz, self.iteration+1, zaxis, fill='green')
+		self.canvas.create_line(self.iteration%self.windowSize, prevx, (self.iteration%self.windowSize)+1, xaxis, fill='blue')
+		self.canvas.create_line(self.iteration%self.windowSize, prevy, (self.iteration%self.windowSize)+1, yaxis, fill='red')
+		self.canvas.create_line(self.iteration%self.windowSize, prevz, (self.iteration%self.windowSize)+1, zaxis, fill='green')
 		#self.canvas.create_oval(self.iteration, acc, self.iteration+1, acc+1, outline='black', fill='black')
 
 
@@ -62,14 +64,14 @@ class windowControl(Tkinter.Tk):
 	# Calculates acceleration to detect fall patterns
 	def detectFall(self, xaxis, yaxis, zaxis, prevx, prevy, prevz):
 		norm = math.sqrt((xaxis*xaxis)+(yaxis*yaxis)+(zaxis*zaxis))
-		print "X %d\t Y %d\t Z %d\t N %d"%(xaxis, yaxis, zaxis, norm)
+		#print "I %d\t X %d\t Y %d\t Z %d\t N %d"%(self.iteration%self.windowSize, xaxis, yaxis, zaxis, norm)
 		return norm
 
 
 
 	# Calculates activity to detect falls
 	def calculateMovement(self):
-		if self.runDemo == True:
+		if self.runDemo == 1:
 			data = self.watch.read()
 
 			# Test whether data was recorded
@@ -101,10 +103,28 @@ class windowControl(Tkinter.Tk):
 				self.iteration += 1
 
 				self.drawCoordinates(finx, finy, finz, prevx, prevy, prevz, norm)
-				# TODO Make possibility to record current Demo (or play it)
-				#self.recordDemo(finx, finy, finz, prevx, prevy, prevz, norm)
+				
+				if self.recordDemo == True:
+					self.file.write('i\t%d\tx\t%d\ty\t%d\tz\t%d\tn\t%d\t\n'%(self.iteration-1, finx, finy, finz, norm))
 
 			Timer(self.precision, self.calculateMovement, ()).start()
+
+
+
+	def displayRecord(self):
+		if self.runDemo == 2:
+			line = self.file.readline()
+			coupe = line.split("\t")
+			if len(coupe) > 1:
+				self.iteration += 1
+				self.drawCoordinates(coupe[3], coupe[5], coupe[7], self.coord['xaxis'], self.coord['yaxis'], self.coord['zaxis'], coupe[9])
+
+				self.coord['xaxis'] = int(coupe[3])
+				self.coord['yaxis'] = int(coupe[5])
+				self.coord['zaxis'] = int(coupe[7])
+
+				Timer(self.precision, self.displayRecord, ()).start()
+				#self.drawCoordinates(finx, finy, finz, prevx, prevy, prevz, norm)
 
 
 
@@ -124,26 +144,69 @@ class windowControl(Tkinter.Tk):
 		label.pack(padx=5, pady=5)
 		self.labelVariable.set("Ready to start")
 
-		self.buttonVariable = Tkinter.StringVar()
-		ButtonOn = Tkinter.Button(self, textvariable=self.buttonVariable, command=self.OnButtonClick)
+		self.buttonDemo = Tkinter.StringVar()
+		ButtonOn = Tkinter.Button(self, textvariable=self.buttonDemo, command=self.DemoButtonClick)
 		ButtonOn.pack(padx=10, pady=10)
-		self.buttonVariable.set("Start demo mode")
+		self.buttonDemo.set("Start live demo")
+
+		self.buttonRecord = Tkinter.StringVar()
+		ButtonOn = Tkinter.Button(self, textvariable=self.buttonRecord, command=self.RecordButtonClick)
+		ButtonOn.pack(padx=10, pady=10)
+		self.buttonRecord.set("Load recorded demo")
 
 
 
-	def OnButtonClick(self):
-        	if self.runDemo == False:
-			self.runDemo = True
-			self.buttonVariable.set("Stop demo mode")
+	def DemoButtonClick(self):
+        	if self.runDemo == 0:
+			self.runDemo = 1
+			self.iteration = 0
+			self.canvas.delete("all")
+			self.buttonDemo.set("Record current demo")
+			self.buttonRecord.set("Back to main menu")
 			self.labelVariable.set("Awaiting events")
 
 			#Wireless link init
-			self.watch = eZ430.watch()
+			if not hasattr(self, 'watch'):
+				self.watch = eZ430.watch()
 
 			Timer(self.precision, self.calculateMovement, ()).start()
-		else:
-			self.runDemo = False
-			self.buttonVariable.set("Start demo mode")
-			self.labelVariable.set("Ready to start")
-			#self.watch.stop()
+		elif self.runDemo == 1 and self.recordDemo == False:
+			self.recordDemo = True
+			self.buttonDemo.set("Pause recording demo")
+			if not hasattr(self, 'file'):
+				self.file = open('record.data', 'w+')
 
+			print "Recording to file record.data"
+			#self.file.write('This is a test\n')
+			#self.watch.stop()
+		elif self.runDemo == 1 and self.recordDemo == True:
+			self.recordDemo = False
+			self.buttonDemo.set("Record current demo")
+
+
+	def RecordButtonClick(self):
+		if self.runDemo == 0:
+			if os.path.exists("record.data"):
+				print "Loading recorded demo..."
+
+				self.runDemo = 2
+				self.canvas.delete("all")
+				self.iteration = 0
+				self.buttonDemo.set("Test")
+				self.buttonRecord.set("Back to main menu")
+				self.labelVariable.set("Playing recorded demo")
+				
+				self.file = open('record.data', 'r')
+				Timer(self.precision, self.displayRecord, ()).start()
+			else:
+				print "No record to load with"
+		elif self.runDemo > 0:
+			self.runDemo = 0
+
+			self.recordDemo = False
+			if hasattr(self, 'file'):
+				self.file.close()
+
+			self.buttonDemo.set("Start live demo")
+			self.buttonRecord.set("Load recorded demo")
+			self.labelVariable.set("Ready to start")
