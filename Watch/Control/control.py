@@ -75,14 +75,14 @@ command_map = {
 
 
 if __name__ == '__main__':
-    if len(sys.argv) < 2:
-        print 'Usage: sudo python control.py COMMAND [options]'
-        sys.exit(-1)
+	if len(sys.argv) < 2:
+		print 'Usage: sudo python control.py COMMAND [options]'
+		sys.exit(-1)
 
-    command = sys.argv[1]
-    if command in command_map:
-        command_map[command](sys.argv[2:])
-    else:
-        print 'Command not supported: {}'.format(command)
-        sys.exit(-1)
+	command = sys.argv[1]
+	if command in command_map:
+		command_map[command](sys.argv[2:])
+	else:
+		print 'Command not supported: {}'.format(command)
+		sys.exit(-1)
 

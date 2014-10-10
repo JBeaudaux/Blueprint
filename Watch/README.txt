@@ -13,4 +13,4 @@ General notice
 
 The source code for the Blue print smart-watch is divided in two parts:
 # The firmware of the watch, that can be deployed on ez430 chronos watch. It enables fall detection, heart attack prevention and an emergency alarm system. 
-# The control station framework, that can run on any linux/OSX/RaspeberryPy syste. It includes a control mode, that detects the watch emergency alarm system messages and notify caretakers when triggered, as well as a demo mode that displays the watch sensed data (e.g. movement, heart rate) for public advertisement of the watch capabilities.
+# The control station framework, that can run on UNIX systems. It includes a control mode, that detects the watch emergency alarm system messages and notify caretakers when triggered, as well as a demo mode that displays the watch sensed data (e.g. movement, heart rate) for public advertisement of the watch capabilities.
