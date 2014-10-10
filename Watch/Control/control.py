@@ -24,9 +24,10 @@ __email__ = "julienbeaudaux@gmail.com"
 # consequencial damages or any damages whatsoever.
 
 
-import eZ430, dbus, time, math
+import eZ430, dbus, time, math, os
 import sys, Tkinter
 import gui
+import smtplib
 
 
 # Demo mode displaying the watch sensed data for public advertisement
@@ -36,21 +37,91 @@ def demoMode(extra):
 	app.mainloop()
 
 
+def callCaretake():
+	print "Call caretake!!!"
+
+
+def verifyInfos():
+	ok = False
+
+	if not os.path.exists("conf.blue"):
+		handleConfig(None)
+
+	while not ok:
+		conffile = open('conf.blue', 'r')
+		line = conffile.readline().split(" ")
+		recv = '' if len(line) != 4 else line[len(line)-1]
+
+		line = conffile.readline().split(" ")
+		send = '' if len(line) != 4 else line[len(line)-1]
+
+		line = conffile.readline().split(" ")
+		pasw = '' if len(line) != 4 else line[len(line)-1]
+
+		line = conffile.readline().split(" ")
+		trig = '' if len(line) != 4 else line[len(line)-1]
+
+		conffile.close()
+
+		if recv != '' and send != '' and pasw != '':
+			ok = True
+		else:
+			handleConfig(None)
+
+	print "Verif OK!"
+
 
 # Operational control mode that calls caretakers upon alert message
 def controlMode(extra):
-	run=1
+	run=0
+	trigger = 5
+
+	verifyInfos()
 
 	# Wireless link init
-	#watch = eZ430.watch()
+	watch = eZ430.watch()
 
-	#while run == 1:
-	#	data = watch.read()
-	#	datalen = len(data)
+	data = watch.read()
+	pastdata = data
+	time.sleep(1)
+	data = watch.read()
+	pastdata = data
+
+	while run == 1:
+		data = watch.read()
+		datalen = len(data)
+
 		#Test for incoming data
+		if datalen > 0 and data != pastdata:
+			callCaretake()
+			time.sleep(trigger)	#Waits for the alarm to dissipate
+			data = watch.read()
+			time.sleep(1)
+			data = watch.read()
+			data = watch.read()
+			print "Alarm off"
+
+		pastdata = data
+
 		#Define alarm type
 		#Send email to caretakers
+		time.sleep(0.02)
 
+
+def handleConfig(extra):
+	conffile = open('conf.blue', 'w+')
+	line = raw_input('Enter the email address of the caretaker to be contacted\n')
+	conffile.write("receiver = %s \n"%(line))
+
+	line = raw_input('Enter the email address to use to send emergency messages with\n')
+	conffile.write("sender = %s \n"%(line))
+
+	line = raw_input('Enter the password of the email address to use to send with\n')
+	conffile.write("password = %s \n"%(line))
+
+	line = raw_input('Enter the delay for the alarm to be set off (in sec)\n')
+	conffile.write("trigger = %d \n"%(line))
+	conffile.close()
 
 
 # Provides details on the control center
@@ -66,19 +137,12 @@ def handleHelp(extra):
 	#print '-------\n'
 
 
-
-command_map = {
-    'control': controlMode,
-    'demo': demoMode,
-    'help': handleHelp
-}
-
-
 if __name__ == '__main__':
 	if len(sys.argv) < 2:
 		print 'Usage: sudo python control.py COMMAND [options]'
 		sys.exit(-1)
 
+	command_map = {'control': controlMode, 'demo': demoMode, 'config': handleConfig, 'help': handleHelp}
 	command = sys.argv[1]
 	if command in command_map:
 		command_map[command](sys.argv[2:])

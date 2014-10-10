@@ -210,3 +210,4 @@ class windowControl(Tkinter.Tk):
 			self.buttonDemo.set("Start live demo")
 			self.buttonRecord.set("Load recorded demo")
 			self.labelVariable.set("Ready to start")
+
