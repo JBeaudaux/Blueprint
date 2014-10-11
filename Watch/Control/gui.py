@@ -32,6 +32,7 @@ class windowControl(Tkinter.Tk):
 
 	runDemo = 0	#0=inactive ; 1=live ; 2=recorded
 	recordDemo = False
+	pauseDemo = True
 
 	coord={'xaxis':0, 'yaxis':0, 'zaxis':0, 'acc':0}
 
@@ -112,7 +113,7 @@ class windowControl(Tkinter.Tk):
 
 
 	def displayRecord(self):
-		if self.runDemo == 2:
+		if self.runDemo == 2 and self.pauseDemo == False:
 			line = self.file.readline()
 			coupe = line.split("\t")
 			if len(coupe) > 1:
@@ -124,7 +125,6 @@ class windowControl(Tkinter.Tk):
 				self.coord['zaxis'] = int(coupe[7])
 
 				Timer(self.precision, self.displayRecord, ()).start()
-				#self.drawCoordinates(finx, finy, finz, prevx, prevy, prevz, norm)
 
 
 
@@ -177,11 +177,18 @@ class windowControl(Tkinter.Tk):
 				self.file = open('record.data', 'w+')
 
 			print "Recording to file record.data"
-			#self.file.write('This is a test\n')
 			#self.watch.stop()
 		elif self.runDemo == 1 and self.recordDemo == True:
 			self.recordDemo = False
 			self.buttonDemo.set("Record current demo")
+		elif self.runDemo == 2 and self.pauseDemo == True:
+			self.buttonDemo.set("Pause recoded demo")
+			self.pauseDemo = False
+			self.displayRecord()
+		elif self.runDemo == 2 and self.pauseDemo == False:
+			self.buttonDemo.set("Play recoded demo")
+			self.pauseDemo = True
+			
 
 
 	def RecordButtonClick(self):
@@ -192,7 +199,7 @@ class windowControl(Tkinter.Tk):
 				self.runDemo = 2
 				self.canvas.delete("all")
 				self.iteration = 0
-				self.buttonDemo.set("Test")
+				self.buttonDemo.set("Play recoded demo")
 				self.buttonRecord.set("Back to main menu")
 				self.labelVariable.set("Playing recorded demo")
 				

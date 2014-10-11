@@ -28,7 +28,12 @@ import eZ430, dbus, time, math, os
 import sys, Tkinter
 import gui
 import smtplib
+from smtplib import SMTPException
 
+
+message="Subject: Blue print emergency message\n\nThis is an emergency message."
+
+conf_map = {'receiver': '', 'sender': '', 'password': '', 'server': '', 'port': '', 'trigger': ''}
 
 # Demo mode displaying the watch sensed data for public advertisement
 def demoMode(extra):
@@ -39,6 +44,16 @@ def demoMode(extra):
 
 def callCaretake():
 	print "Call caretake!!!"
+	mess = "From: Blue print system <%s>\nTo: Caretaker<%s>\n%s"%(conf_map['sender'], conf_map['receiver'], message)
+	
+	print mess
+	
+	try:
+		#smtpObj = smtplib.SMTP(conf_map['server'], int(conf_map['port']))
+		#smtpObj.sendmail(send, recv, mess)
+		print "Successfully sent email"
+	except SMTPException:
+		print "Error: unable to send email"
 
 
 def verifyInfos():
@@ -48,35 +63,45 @@ def verifyInfos():
 		handleConfig(None)
 
 	while not ok:
+		ok = True
+
 		conffile = open('conf.blue', 'r')
-		line = conffile.readline().split(" ")
-		recv = '' if len(line) != 4 else line[len(line)-1]
 
-		line = conffile.readline().split(" ")
-		send = '' if len(line) != 4 else line[len(line)-1]
-
-		line = conffile.readline().split(" ")
-		pasw = '' if len(line) != 4 else line[len(line)-1]
-
-		line = conffile.readline().split(" ")
-		trig = '' if len(line) != 4 else line[len(line)-1]
-
+		# Retrieve all infos at once
+		for line in conffile:
+			line=line.rstrip().split(" ")
+			if len(line) == 3 and line[0] in conf_map:
+				conf_map[line[0]] = line[2]
 		conffile.close()
+		
+		for it in conf_map:
+			if conf_map[it] == '':
+				ok = False
 
-		if recv != '' and send != '' and pasw != '':
-			ok = True
-		else:
+		# Test numerics
+		if not conf_map['port'].isdigit() or not conf_map['trigger'].isdigit():
+			ok = False
+			print "Invalid port or trigger number"
+		
+		# Test emails
+		if len(conf_map['sender'].split('@')) != 2 or len(conf_map['receiver'].split('@')) != 2:
+			ok = False
+			print "Invalid sender or receiver mail address"
+
+		if ok == False:
 			handleConfig(None)
 
-	print "Verif OK!"
+	print "All parameters seem valid"
 
 
 # Operational control mode that calls caretakers upon alert message
 def controlMode(extra):
-	run=0
-	trigger = 5
-
+	run = 0
+	
 	verifyInfos()
+	
+	callCaretake()
+	return
 
 	# Wireless link init
 	watch = eZ430.watch()
@@ -94,7 +119,7 @@ def controlMode(extra):
 		#Test for incoming data
 		if datalen > 0 and data != pastdata:
 			callCaretake()
-			time.sleep(trigger)	#Waits for the alarm to dissipate
+			time.sleep(int(conf_map['trigger']))	#Waits for the alarm to dissipate
 			data = watch.read()
 			time.sleep(1)
 			data = watch.read()
@@ -110,17 +135,25 @@ def controlMode(extra):
 
 def handleConfig(extra):
 	conffile = open('conf.blue', 'w+')
+	conffile.write("!!!Blue print configuration file!!!")
+
 	line = raw_input('Enter the email address of the caretaker to be contacted\n')
-	conffile.write("receiver = %s \n"%(line))
+	conffile.write("receiver = %s\n"%(line))
 
 	line = raw_input('Enter the email address to use to send emergency messages with\n')
-	conffile.write("sender = %s \n"%(line))
+	conffile.write("sender = %s\n"%(line))
 
 	line = raw_input('Enter the password of the email address to use to send with\n')
-	conffile.write("password = %s \n"%(line))
+	conffile.write("password = %s\n"%(line))
+
+	line = raw_input('Enter the mail server used to send with\n')
+	conffile.write("server = %s\n"%(line))
+
+	line = raw_input('Enter the port of the mail server used to send with\n')
+	conffile.write("port = %s\n"%(line))
 
 	line = raw_input('Enter the delay for the alarm to be set off (in sec)\n')
-	conffile.write("trigger = %d \n"%(line))
+	conffile.write("trigger = %s\n"%(line))
 	conffile.close()
 
 
@@ -131,10 +164,13 @@ def handleHelp(extra):
 	print 'The Blue print open smart-watch is designed to detect sudden health onsets (i.e. Falls and heart failures), thus enabling preventive measures to be taken or notifying caretakers for improved and quicker emergency response. The control center is meant as a relay between the watch and the caretakers, notifying them when needed, as well as a tool for displaying the capabilities of the watch.\n'
 	print 'Commands'
 	print '--------\n'
-	print 'control : In this mode, the control center handles the emergency messages sent by the watch and notifies caretakers through SMS/eMail;\n'
-	print 'demo : In this mode, the control center graphically displays the watch sensed data (i.e. movement, heart rate) and subsequent interpretations.\n'
+	print 'control\tIn this mode, the control center handles the emergency messages sent by the watch and notifies caretakers through SMS/eMail.'
+	print 'demo\tIn this mode, the control center graphically displays the watch sensed data (i.e. movement, heart rate) and subsequent interpretations.'
+	print 'config\tAllow for the system configuration (setting sender and receiver infos, etc.).'
+	print 'help\tEnters this very help menu'
 	#print 'Options'
 	#print '-------\n'
+	print ''
 
 
 if __name__ == '__main__':
