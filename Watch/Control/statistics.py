@@ -25,20 +25,23 @@ __email__ = "julienbeaudaux@gmail.com"
 
 import math
 
-# Calculate variance of a sample
-def variance(l):
-	print "lol"
 
 # Calculates statistical parameters of a sample
-def stats(vals, confidence_interval=0.05):
+def stats(vals, confinter=95):
 	tot = sum(vals)
 	nbv = len(vals)
 	avg = tot / float(nbv)
-	sortVals = vals.sort()
-	medi = sortVals[nbv/2]
-	maxi = vals.max()
-	mini = vals.min()
-	vari = variance(vals)
+	medi = vals[nbv/2]
+	maxi = max(vals)
+	mini = min(vals)
+	
+	vari = sum([(i-avg)**2 for i in vals])/(nbv-1 or 1)
 	stdv = math.sqrt(vari)
 	
-	return avg, medi, vari, stdv, mini, maxi
+	conf_map = {90: 1.65, 95: 1.96, 99: 2.58}
+	if confinter not in conf_map:
+		print "Warning: Invalid confidence level (should be 90, 95 or 99)."
+	else:
+		marginError = conf_map[confinter] * (float(stdv)/(math.sqrt(float(nbv))))
+	
+	return avg, medi, vari, stdv, mini, maxi, marginError

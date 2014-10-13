@@ -27,6 +27,7 @@ import Tkinter
 import time
 from threading import Timer
 import eZ430, dbus, time, math, os, sys
+import statistics
 
 class windowControl(Tkinter.Tk):
 
@@ -49,6 +50,7 @@ class windowControl(Tkinter.Tk):
 		ico = r"%s/%s/blueprint.gif"%(os.getcwd(), sys.argv[0][:-11])
 		img = Tkinter.Image("photo", file=ico)
 		self.tk.call('wm','iconphoto',self._w,img)
+		
 		self.initialize()
 
 
