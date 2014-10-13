@@ -41,6 +41,7 @@ class watch():
 
 
 	def start(self):
+                print "Connecting Blue print watch"
                 self.conn = serial.Serial(self.dev, 115200, timeout = 1)
                 self.write("\xFF\x07\x03")
 

@@ -26,7 +26,7 @@ __email__ = "julienbeaudaux@gmail.com"
 import Tkinter
 import time
 from threading import Timer
-import eZ430, dbus, time, math, os
+import eZ430, dbus, time, math, os, sys
 
 class windowControl(Tkinter.Tk):
 
@@ -46,6 +46,9 @@ class windowControl(Tkinter.Tk):
         	Tkinter.Tk.__init__(self,parent)
 		self.parent = parent
 		self.title('Blue print watch control center')
+		ico = r"%s/%s/blueprint.gif"%(os.getcwd(), sys.argv[0][:-11])
+		img = Tkinter.Image("photo", file=ico)
+		self.tk.call('wm','iconphoto',self._w,img)
 		self.initialize()
 
 
@@ -74,6 +77,7 @@ class windowControl(Tkinter.Tk):
 	def calculateMovement(self):
 		if self.runDemo == 1:
 			data = self.watch.read()
+			#print data
 
 			# Test whether data was recorded
 			if len(data) > 2 and self.coord['xaxis'] != ord(data[0]) and self.coord['yaxis'] != ord(data[1]) and self.coord['zaxis'] != ord(data[2]):
