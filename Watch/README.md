@@ -7,10 +7,15 @@ The Blue print open smart-watch is designed to detect sudden health onsets, thus
 # Fall detection: Many elders have experienced falls, without being able to get back on their feet and call for help. The watch thus integrates a movement patters monitoring and analysis component, able to quickly detect critical falls and immediatly notify relatives or care services (similarly to the alarm button).
 
 
-
 General notice
 --------------
 
 The source code for the Blue print smart-watch is divided in two parts:
 # The firmware of the watch, that can be deployed on ez430 chronos watch. It enables fall detection, heart attack prevention and an emergency alarm system. 
 # The control station framework, that can run on UNIX systems. It includes a control mode, that detects the watch emergency alarm system messages and notify caretakers when triggered, as well as a demo mode that displays the watch sensed data (e.g. movement, heart rate) for public advertisement of the watch capabilities.
+
+
+Requirements
+------------
+
+The watch firmware is intended to be compiled on Linux environment using msp430-gcc version 4.6.3, and to be flashed to the watch through mspdebug. The control center requires python version 2.7.6. Some additional tools provided also require Gnuplot 4.6. The stresstesting of the provided firmware and control center has been tested accordingly.

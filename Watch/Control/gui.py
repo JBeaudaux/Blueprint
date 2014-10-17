@@ -43,7 +43,7 @@ class windowControl(Tkinter.Tk):
 	moyVal = 0
 	moySSE = 0
 	SSE = 0
-	
+
 
 	def __init__(self,parent, option=0):
         	Tkinter.Tk.__init__(self,parent)
@@ -60,14 +60,15 @@ class windowControl(Tkinter.Tk):
 		self.initialize()
 
 
-
 	# Draws movement whenever activity is detected
 	def drawCoordinates(self, xaxis, yaxis, zaxis, prevx, prevy, prevz, acc, prevacc, option=0):
 		if self.iteration%self.windowSize == 0:
 			self.canvas.delete("all")
-			self.canvas.create_line(25, 25, 70, 25, fill='cornflower blue')
-			self.canvas.create_text(200, 25, text='Accelerometric axials root-sum-of-square', fill='black')
-
+			self.drawAxis()
+		
+		if self.iteration%self.windowSize < 20 or self.iteration%self.windowSize > self.windowSize-10:
+			return
+		
 		self.canvas.create_oval(self.iteration%self.windowSize, acc, (self.iteration%self.windowSize)+1, prevacc, outline='cornflower blue', fill='cornflower blue')
 		
 		if self.drawall == 1:
@@ -75,6 +76,26 @@ class windowControl(Tkinter.Tk):
 			self.canvas.create_line(self.iteration%self.windowSize, prevy, (self.iteration%self.windowSize)+1, yaxis, fill='red')
 			self.canvas.create_line(self.iteration%self.windowSize, prevz, (self.iteration%self.windowSize)+1, zaxis, fill='green')
 
+
+	def drawAxis(self):
+		self.canvas.create_line(25, 25, 70, 25, fill='cornflower blue')
+		self.canvas.create_text(200, 25, text='Accelerometric axials root-sum-of-square', fill='black')
+		
+		self.canvas.create_line(20, 10, 20, 280, fill='black')
+		self.canvas.create_line(20, 10, 15, 20, fill='black')
+		self.canvas.create_line(20, 10, 25, 20, fill='black')
+		self.canvas.create_text(10, 150, text='Movement amplitude', fill='black', angle=90)
+		
+		self.canvas.create_line(20, 280, self.windowSize-10, 280, fill='black')
+		self.canvas.create_line(self.windowSize-10, 280, self.windowSize-20, 275, fill='black')
+		self.canvas.create_line(self.windowSize-10, 280, self.windowSize-20, 285, fill='black')
+		self.canvas.create_text(float(self.windowSize)/2, 290, text='Time (s)', fill='black')
+		
+		iteration = 1
+		i = 20
+		while i<self.windowSize-20:
+			self.canvas.create_line(i, 275, i, 280, fill='black')
+			i+=iteration*(1/self.precision)
 
 
 	# Draws anomaly detection thresholds and parameters
@@ -95,7 +116,6 @@ class windowControl(Tkinter.Tk):
 		#	self.canvasAcc.create_oval(self.iteration%self.windowSize, 100-diff, (self.iteration%self.windowSize)+1, 100-diff+1, outline='blue', fill='blue')
 		#	self.canvasAcc.create_oval(self.iteration%self.windowSize, 100-threshF, (self.iteration%self.windowSize)+1, 100-threshF+1, outline='red', fill='red')
 		#	self.canvasAcc.create_oval(self.iteration%self.windowSize, 100-threshL, (self.iteration%self.windowSize)+1, 100-threshL+1, outline='green', fill='green')
-
 
 
 	# Calculates activity to detect falls
@@ -140,7 +160,6 @@ class windowControl(Tkinter.Tk):
 			Timer(self.precision, self.calculateMovement, ()).start()
 
 
-
 	def displayRecord(self):
 		if self.runDemo == 2 and self.pauseDemo == False:
 			line = self.file.readline()
@@ -160,7 +179,6 @@ class windowControl(Tkinter.Tk):
 				Timer(self.precision, self.displayRecord, ()).start()
 
 
-
 	# Sets the GUI up
 	def initialize(self):
 		self.canvas = Tkinter.Canvas(self, height=300, width=1200, bg="white")
@@ -169,8 +187,7 @@ class windowControl(Tkinter.Tk):
 		#self.canvasAcc = Tkinter.Canvas(self, height=100, width=1200, bg="white")
 		#self.canvasAcc.pack(padx=5, pady=5)
 		
-		self.canvas.create_line(25, 25, 70, 25, fill='cornflower blue')
-		self.canvas.create_text(200, 25, text='Accelerometric axials root-sum-of-square', fill='black')
+		self.drawAxis()
 
 		self.labelVariable = Tkinter.StringVar()
 		label = Tkinter.Label(self, textvariable=self.labelVariable, anchor="w", fg="black", bg="white")
@@ -188,14 +205,13 @@ class windowControl(Tkinter.Tk):
 		self.buttonRecord.set("Load recorded demo")
 
 
-
 	def DemoButtonClick(self):
         	if self.runDemo == 0:
 			self.runDemo = 1
 			self.iteration = 0
 			self.canvas.delete("all")
-			self.canvas.create_line(25, 25, 70, 25, fill='cornflower blue')
-			self.canvas.create_text(200, 25, text='Accelerometric axials root-sum-of-square', fill='black')
+			self.drawAxis()
+			
 			self.buttonDemo.set("Record current demo")
 			self.buttonRecord.set("Back to main menu")
 			self.labelVariable.set("Awaiting events")
@@ -223,7 +239,6 @@ class windowControl(Tkinter.Tk):
 		elif self.runDemo == 2 and self.pauseDemo == False:
 			self.buttonDemo.set("Play recoded demo")
 			self.pauseDemo = True
-			
 
 
 	def RecordButtonClick(self):
@@ -233,8 +248,8 @@ class windowControl(Tkinter.Tk):
 
 				self.runDemo = 2
 				self.canvas.delete("all")
-				self.canvas.create_line(25, 25, 70, 25, fill='cornflower blue')
-				self.canvas.create_text(200, 25, text='Accelerometric axials root-sum-of-square', fill='black')
+				self.drawAxis()
+				
 				self.iteration = 0
 				self.buttonDemo.set("Play recoded demo")
 				self.buttonRecord.set("Back to main menu")
