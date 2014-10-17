@@ -1,5 +1,5 @@
-Blueprint watch
-===============
+Blue print watch
+================
 
 The Blue print open smart-watch is designed to detect sudden health onsets, thus enabling preventive measures to be taken or notifying caretakers for improved and quicker emergency response. Precisely, the role of the Blue print smart-watch is threefold:
 - Early detection of heart failure: Combined, factors such as ambient temperature, physical activity and nutrition have a strong impact on one's health, and may quickly be the cause of heart failure. Those can often be avoided by simply resting a few mements before the stroke actually occur. In this context, it is important to assess risk-level in real-time, in order to notify the user and allow him to rest in time to prevent imminent strokes. Through the constant monitoring and analysis of vital parameters, the Blue print smart-watch can detect at-risk situation before they actually occur, and notify the person and its caretakers when taking action may save his life.
