@@ -26,6 +26,24 @@ __email__ = "julienbeaudaux@gmail.com"
 import math
 
 
+# Calculate iteratively the sum of squared deviations from the mean
+def updateSSE(li):
+	t = 0
+	moy = 0
+	SSE = 0
+	
+	for xt in li:
+		t += 1
+		et = xt - moy
+		#print xt, moy, et
+		moy = moy + (et/t)
+		SSE = SSE + (et *(xt - moy))
+		#print xt, moy, SSE
+	
+	# We then get the SSE, the 
+	return moy, SSE, SSE/(t-1), math.sqrt(SSE/(t-1))
+
+
 # Calculates statistical parameters of a sample
 def stats(vals, confinter=95):
 	tot = sum(vals)
@@ -45,3 +63,9 @@ def stats(vals, confinter=95):
 		marginError = conf_map[confinter] * (float(stdv)/(math.sqrt(float(nbv))))
 	
 	return avg, medi, vari, stdv, mini, maxi, marginError
+
+
+# Just a test
+#li = [2.,5.,8.,1.,0.,0.,9.,3.,2.,8.,6.,4.,5.]
+#print stats(li)
+#print updateSSE(li)

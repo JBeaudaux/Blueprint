@@ -36,9 +36,9 @@ message="Subject: Blue print emergency message\n\nThis is an emergency message."
 conf_map = {'receiver': '', 'sender': '', 'password': '', 'server': '', 'port': '', 'trigger': ''}
 
 # Demo mode displaying the watch sensed data for public advertisement
-def demoMode(extra):
+def demoMode(extra, option=0):
 	#Start the GUI	
-	app = gui.windowControl(None)
+	app = gui.windowControl(None, option)
 	app.mainloop()
 
 
@@ -95,7 +95,7 @@ def verifyInfos():
 
 
 # Operational control mode that calls caretakers upon alert message
-def controlMode(extra):
+def controlMode(extra, option=0):
 	run = 0
 	
 	verifyInfos()
@@ -133,7 +133,7 @@ def controlMode(extra):
 		time.sleep(0.02)
 
 
-def handleConfig(extra):
+def handleConfig(extra, option=0):
 	conffile = open('conf.blue', 'w+')
 	conffile.write("!!!Blue print configuration file!!!")
 
@@ -158,7 +158,7 @@ def handleConfig(extra):
 
 
 # Provides details on the control center
-def handleHelp(extra):
+def handleHelp(extra, option=0):
 	print '\nBlueprint watch control center'
 	print '==============================\n'
 	print 'The Blue print open smart-watch is designed to detect sudden health onsets (i.e. Falls and heart failures), thus enabling preventive measures to be taken or notifying caretakers for improved and quicker emergency response. The control center is meant as a relay between the watch and the caretakers, notifying them when needed, as well as a tool for displaying the capabilities of the watch.\n'
@@ -168,8 +168,10 @@ def handleHelp(extra):
 	print 'demo\tIn this mode, the control center graphically displays the watch sensed data (i.e. movement, heart rate) and subsequent interpretations.'
 	print 'config\tAllow for the system configuration (setting sender and receiver infos, etc.).'
 	print 'help\tEnters this very help menu'
-	#print 'Options'
-	#print '-------\n'
+	print ''
+	print 'Options'
+	print '-------\n'
+	print 'demo [drawall] displays axial movements in addition to the axials root-sum-of-squares if drawall equals to 1'
 	print ''
 
 
@@ -178,10 +180,14 @@ if __name__ == '__main__':
 		print 'Usage: sudo python control.py COMMAND [options]'
 		sys.exit(-1)
 
+	option = 0
 	command_map = {'control': controlMode, 'demo': demoMode, 'config': handleConfig, 'help': handleHelp}
 	command = sys.argv[1]
+	if len(sys.argv) > 2:
+		option = int(sys.argv[2])
+	
 	if command in command_map:
-		command_map[command](sys.argv[2:])
+		command_map[command](sys.argv[2:], option)
 	else:
 		print 'Command not supported: {}'.format(command)
 		sys.exit(-1)
