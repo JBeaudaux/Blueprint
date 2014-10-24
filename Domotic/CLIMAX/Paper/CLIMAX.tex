@@ -285,7 +285,7 @@ In fact, each parameter that impacts at least one of the application-defined req
 \begin{figure*}[t]
 	\begin{centering}
 	\includegraphics[width=0.8\textwidth]{figs/CLIMAX.png}
-	\caption{The CLIMAX framework}
+	\caption{Illustration of the CLIMAX framework structure}
 	\label{core_climax}
 	\end{centering}
 \end{figure*}
@@ -294,15 +294,19 @@ Before the deployment, the CLIMAX framework is provided with a set of MAC config
 
 During the network operation, the CLIMAX framework checks whether all of its per-hop constraints, previously derive from global requirements, are respected. Should this not be the case, the current performance and traffic load measured through the constant node monitoring are provided as parameters to to perfomance model. For each constraint, the model will then return the subset of duty-cycle values that are expected to fulfill it, sorted by order of performance. These lists are then provided to a solver, that will eventually select one of it as the node MAC configuration.
 
-\subsubsection{Empirical per-link performance matrix}
-\label{empir-matrix}
+\subsubsection{Calculating the default parameters of the evolutive model}
+
+%\subsubsection{Empirical per-link performance matrix}
+%\label{empir-matrix}
 \textit{Default values can be derived from simulations/experiments led prior to the real deployment.}
 
-\subsubsection{Markovian modeling}
-\label{markov-matrix}
+%\subsubsection{Markovian modeling}
+%\label{markov-matrix}
 Another approach for calculating the default parameters of the evolutive model is to do so through Markovian modeling. Contrary to the empirical approach, a formally modeling expected per-link performance does not require any additional experimentation, and can thus be more convenient in many cases.
+In order to theoretically calculate the per-link performance matrix, we rely on the same methodology as introduced in \cite{yang11}. 
+%For the sake of clarity, the channel is assumed to be free of fading, capture effect and hidden terminal. 
 
-In order to theoretically calculate the per-link performance matrix, we rely on the same methodology as introduced in \cite{yang11}. For the sake of clarity, the channel is assumed to be free of fading, capture effect and hidden terminal. 
+For the sake of concision, we only demonstrate in the present paper the 
 
 \subsubsection{Calculating the best-suited configuration}
 
