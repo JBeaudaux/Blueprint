@@ -75,7 +75,12 @@ struct bluetimer sbluetimer;
 
 #define BLUE_STR " LUEPRINT LUEPRINT"
 
+#define AGGREG 50	//uses the mean of AGGREG values to calculate SSE
+
+static int dataAgg[AGGREG];
+static u8 position = 0;
 static u8 *str = BLUE_STR;
+static int SSE = 0;
 
 void blue_tick()
 {
@@ -86,6 +91,52 @@ void blue_tick()
 u8 is_blue(void)
 {
   return (sbluetimer.state == BLUE_RUN &&  (ptrMenu_L2 == &menu_L2_Blue));
+}
+
+
+uint8 sqrti(uint8 x)
+{
+	uint8 a,b;
+	b = x;
+	a = x = 0x3f;
+	x = b/x;
+	a = x = (x+a)>>1;
+	x = b/x;
+	a = x = (x+a)>>1;
+	x = b/x;
+	x = (x+a)>>1;
+	return x;
+}
+
+
+// Updates the SSE to discriminate patterns
+uint8 update_SSE(uint8 val)
+{
+	//return SSE;
+}
+
+// Takes axial values and assess current behavior
+uint8 assess_behavior(uint8 xax, uint8 yax, uint8 zax)
+{
+	uint8 norm;
+	uint8 stdv;
+	
+	norm = sqrti((xax*xax)+(yax*yax)+(zax*zax));
+	
+	// Get lower (lie) and upper (fall) bounds
+	stdv = update_SSE(norm);
+	stdv = sqrti(stdv/iter);
+	
+	if(norm > FALLTHRESH*stdv)
+	{
+		return 2;	// Potential fall
+	}
+	else if(norm < stdv/LIETHRESH)
+	{
+		return 1;	// Abnormally low activity
+	}
+	
+	return 0;	// Normal behavior
 }
 
 void update_blue_timer()

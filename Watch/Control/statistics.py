@@ -40,7 +40,7 @@ def updateSSE(li):
 		SSE = SSE + (et *(xt - moy))
 		#print xt, moy, SSE
 	
-	# We then get the SSE, the 
+	# We then get the SSE, the variance and stdv
 	return moy, SSE, SSE/(t-1), math.sqrt(SSE/(t-1))
 
 
