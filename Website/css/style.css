@@ -1,0 +1,196 @@
+/*
+Theme Name: SimpliCss Redux
+Description: 
+Version: 1 
+*/
+
+/*** Reset ***/
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,font,img,ins,kbd,q,s,samp,small,strike,strong,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td { background: transparent; border: 0; font-size: 100%; margin: 0; outline: 0; padding: 0; vertical-align: baseline; }
+ol,ul { list-style: none; }
+blockquote,q { quotes: none; }
+blockquote:before,blockquote:after,q:before,q:after { content: ''; content: none; }
+:focus { outline: 0; }
+img { vertical-align: bottom; }
+ins { text-decoration: none; }
+del { text-decoration: line-through; }
+table { border-collapse: collapse; border-spacing: 0; }
+
+@font-face {
+    font-family: 'CopseRegular';
+    src: url('../fonts/Copse-Regular-webfont.eot');
+    src: url('../fonts/Copse-Regular-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/Copse-Regular-webfont.woff') format('woff'),
+         url('../fonts/Copse-Regular-webfont.ttf') format('truetype'),
+         url('../fonts/Copse-Regular-webfont.svg#CopseRegular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+/*** Clearfix ***/
+.clearfix:after { visibility: hidden; display: block; font-size: 0; content: "."; clear: both; height: 0; }
+.clear { clear: both; }
+
+/*** Positioning and Alignment ***/
+.fl { float: left; }
+.fr { float: right; }
+.txt-left { text-align: left; }
+.txt-right { text-align: right; }
+.txt-center { text-align: center; }
+.no-margin {margin: 0;}
+.push-left-60 {margin-left: 60px;}
+
+/*** General Settings ***/
+body {
+    background: #000;
+    color: #000;
+    font-family: Helvetica, Arial, sans-serif;	
+    font-size: 12px;
+    border-top: 4px #0099FF solid;
+    border-bottom: 4px #0099FF solid;
+}
+
+h1,h2,h3,h4,h5,h6 { 
+    font-family: 'CopseRegular';
+    font-weight: normal; 
+    margin-bottom: 15px;    
+}
+
+p,ul,ol{line-height:22px; margin-bottom: 15px;}
+
+h1 {font-size: 28px;}
+h2 {font-size: 24px;}
+h3 {font-size: 22px;}
+h4 {font-size: 20px;}
+h5 {font-size: 18px;}
+h6 {font-size: 16px}
+
+a {color:#0099FF;}
+
+#main-container {
+    width: 920px;
+    margin: auto;
+    background-color: #fff;
+    padding: 20px;
+    margin-top: 30px;
+}
+
+.container {
+    margin-bottom: 10px;
+    border-top: 1px #ccc solid;
+    padding-top: 20px;
+}
+
+.col-700 {width: 700px;}
+
+.col-200 {width: 200px;}
+
+.col-120 {width: 120px;
+	  height: 110px;}
+
+.col-260 {width: 260px;}
+
+.col-650 {width: 650px;}
+
+.col-580 {width: 580px;
+	  height: 110px;}
+
+.col-270 {width: 270px;}
+
+.col-300 {width: 300px;}
+
+/*** header ***/
+
+#bluelogo {
+    margin-bottom: 10px;
+    width: 60px;
+    height: 60px; 
+}
+
+#header {
+    margin-bottom: 10px;
+}
+
+#header #logo {
+    width: 250px;
+    height: 60px;    
+}
+
+#header #logo h1 {
+    font-size: 28px;
+}
+
+#header #logo h1 span {
+    color: #0099FF
+}
+
+#header #logo p {
+    font-size: 14px;
+    font-family: Tahoma
+}
+
+#header #nav {
+    height: 60px;   
+}
+
+#header #nav ul {margin: 0;}
+
+#header #nav ul li {
+    font-family: 'CopseRegular';
+    float: left;
+    display: inline;
+    font-size: 20px;
+    margin-left: 20px;
+    border-bottom: 5px #0099FF solid;
+    width: 120px;
+    height: 45px;
+}
+
+#header #nav ul li a {
+    text-decoration: none;
+    color: #0099FF
+}
+
+#header #nav ul li a span {
+    display: block;
+    font-size: 10px;
+    font-family: Tahoma;
+    color: #333;
+}
+
+#header #nav ul li a:hover {
+    color: #000;
+}
+
+/*** slideshow ***/
+#slideshow {
+    width: 920px;
+    height: 300px;
+    margin-bottom: 22px;
+}
+
+#slide-nav {
+    text-align: center;
+}
+
+#slide-nav a{
+    text-decoration: none;
+    background-color: #eee;
+    display: inline-block;
+    text-indent: -9999px;
+    width: 10px;
+    height: 10px;
+    margin-right: 10px;
+    border-radius: 5px;
+}
+
+#slide-nav a.activeSlide{background-color: #0099FF}
+
+/*** footer ***/
+#footer {
+    color: #fff;
+    padding: 10px 0;
+    font-family: 'CopseRegular';
+}
+
+/*** subscribe ***/
+

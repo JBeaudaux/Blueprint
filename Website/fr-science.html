@@ -1,0 +1,121 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <link rel="shortcut icon" type="image/png" href="images/Blueprint-logo.png" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="description" content="Project Description" />
+    <meta name="keywords" content="Project Keywords" />
+    <title>Projet Blue print - Prenez votre santé en main</title>	
+    <link href="css/style.css" rel="stylesheet" type="text/css" />			
+    <!--[if IE]><link href="css/style-ie.css" rel="stylesheet" type="text/css" /><![endif]-->
+    <script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
+    <script type="text/javascript" src="js/jquery.cycle.all.js"></script>
+    <script type="text/javascript">
+        $('#slideshow').cycle({ 
+            fx:     'fade', 
+            speed:   300, 
+            timeout: 3000, 
+            pause:   1 ,
+            pager: '#slide-nav'
+        });   
+    </script>
+</head>
+
+<body>
+
+    <div id="main-container" class="clearfix">
+        
+        <div id="header" class="clearfix">
+	    <div id="bluelogo" class="fl"> 
+		<img src="images/Blueprint-logo.png" width="45" height="58" alt="FR" />
+	    </div>
+            <div id="logo" class="fl">
+                <h1 class="no-margin">Projet <span>Blue print</span></h1>
+                <p class="no-margin">Prenez votre santé en main</p>
+            </div><!-- // end #logo -->
+            <div id="nav" class="fr">
+                <ul>
+                    <li><a href="fr-index.html">Accueil <span>En quelques mots</span></a></li>
+                    <li><a href="fr-solutions.html">Solutions <span>En savoir plus</span></a></li>
+                    <li><a href="fr-science.html">Science <span>Aspects innovants</span></a></li>
+                    <li><a href="fr-us.html">Nous<span>Notre équipe</span></a>
+		<a href="fr-index.html"><img src="images/flags/fr.png" width="16" height="16" alt="FR" /></a>
+        	<a href="index.html"><img src="images/flags/en.png" width="16" height="16" alt="EN" /></a>
+		<a href="ua-index.html"><img src="images/flags/ua.png" width="16" height="16" alt="UA" /></a>
+        	<!-- <a href="jp-index.html"><img src="images/flags/jp.png" width="16" height="16" alt="JP" /></a> -->
+		<!-- <a href="index_no.html"><img src="images/flags/no.png" width="16" height="16" alt="NO" /></a></li> -->
+		</li>
+                </ul>
+            </div><!-- // end nav -->
+	
+        </div><!-- // end #header -->
+
+	<div class="container clearfix">
+            <div class="body">
+                <h1>Une approche fondamentalement <font color=#0099FF><i>scientifique</i></font></h1>
+                <p>Le projet <font color=#0099FF><i>Blue print</i></font> repose sur des travaux scientifiques récents pour garantir
+                une qualité de service optimale. De la même manière, nous participons activement à la communauté scientifique en publiant
+                nos propres travaux et technologies innovantes.</p>
+		<ul>
+			<li></li>
+		</ul>
+		
+		<h3>Détection de chutes</h3>
+		<p>Détecter la chute d'une personne est une tâche complexe. En effet, une erreur de détection peut être lourde de 
+		conséquences, qu'elle soit due à la non-détection d'une chute (faux-négatif, laissant la personne à elle-même) ou
+		à la confusion d'un comportement normal (e.g. personne s'asseyant, s'étirant) pour une chute (faux-positif, menant
+		à une intervention inutile). Dans le cadre du projet <font color=#0099FF><i>Blue print</i></font>, nous avons mis
+		en place un système complet permettant de détecter efficacement les chutes réelles et critiques. Notre protocole
+		fonctionne de la manière suivante:</p>
+		<ul>
+		<li align="justify"><font color="#0099FF">#</font> <b>Discrimination du mouvement:</b> 
+		<font color=#0099FF><i>Blue print</i></font> 
+		se base principalement sur les données fournies par des accéléromètres pour identifier les chutes (et de manière
+		optionnelle sur le rythme cardiaque, celui-ci variant rapidement lors d'une chute). Dans un premier temps, les données
+		tri-axiales de l'accéléromètre sont combinées par le biais de leur moyenne quadratique, et deux mesures successives
+		sont comparées entre elles de manière à obtenir l'amplitude du mouvement. Ensuite, ces mesures d'amplitude sont 
+		analysées statistiquement (par le biais de leur écart-type) et divisées en trois catégories distinctes : niveau 
+		d'activité normal (e.g. marche, activités quotidiennes), activité anormalement basse (e.g. pesonne au sol inactive)
+		et chute. Dans ce but, l'écart-type est mis-à-jour itérativement pour chaque nouvelle mesure (cela n'étant pas
+		possible avec la formule générale de l'écart-type, nous avons développé un algorithme spécifique répondant à ce besoin).
+		Chaque mesure de l'amplitude du mouvement est alors comparée à l'écart-type, une chute étant détectée lorsque celle-ci
+		est supérieure à 3 fois l'écart-type, une activité anormalement basse l'étant lorsque l'amplitude est inférieure à la 
+		moitié de l'écart type, et toute autre amplitude étant considérée comme la résultante d'un comportement normal. Ces
+		valeurs par défaut sont issues de campagnes d'expérimentation, mais peuvent être ajustées à loisir dans le système.
+		De cette manière, notre système est capable de détecter avec certitude tout types de chutes, en évitant les faux-négatifs.
+		</li>
+		<li align="justify"><font color="#0099FF">#</font> <b>Confirmation de la criticité de la chute:</b> À ce niveau,
+		certaines situation peuvent être interprétées par le système comme la résultante d'une chute (e.g. se lever, s'asseoir),
+		menant à un faux-positif. Une approche complémentaire a donc été développée pour exclure également ce type d'erreurs.
+		Partant du principe qu'après une chute critique, une personne est le plus souvent incapable de bouger pendant au moins
+		quelques secondes (e.g. sous le choc ou inconscient), nous avons implémenté un algorithme en deux temps pour ce rapprocher
+		de notre objectif. Dans un premier temps, le système vérifie si la chute est suivie d'une longue période d'inactivité,
+		correspondant à la personne au sol sous le choc. Juste après que la chute soit détectée, le système conserve les mesures
+		de l'amplitude du mouvement pendant une minute (valeur par défaut, modifiable), et si les deux-tiers de ces mesures
+		correspondent à un "niveau d'inactivité inhabituel" (valeur par défaut, modifiable), le système suppose que la chute
+		est réelle. Alors, le matériel (montre ou téléphone) émet un son d'alarme, indiquant à la personne d'appuyer sur un
+		bouton pour l'éteindre. Si la personne ne le fait pas, la chute est de nouveau considérée comme réelle, et la personne
+		en charge (famille ou services de soins) est directement notifiée.
+		</li>
+		<li align="center"> <img src="images/fallDetectfr.png" width="600" height="150" alt="Detection chutes" /></li>
+		</ul>
+	</div> <!-- // end .body --> 
+	</div> <!-- // end .container --> 
+	</div> <!-- // end main.container --> 
+    
+    <div id="footer">
+	<p class="no-margin txt-center"><a href="http://validator.w3.org/check?uri=blueprint-project.info" style="border:0">
+            <img style="border:0;width:88px;height:31px"
+                src="images/valid-xhtml.png"
+                alt="CSS Valide !" />
+        </a>
+        <a href="http://jigsaw.w3.org/css-validator/validator?uri=blueprint-project.info" style="border:0">
+            <img style="border:0;width:88px;height:31px"
+                src="images/css_valid.gif"
+                alt="CSS Valide !" />
+        </a></p>
+        <p class="no-margin txt-center"><font color="#0099FF"><i>Blue print</i></font> project, Copyright © 2014-2015 - Julien Beaudaux</p>
+	<p class="no-margin txt-center">Open Source Web Design by <a href="http://www.myhedspace.com">Myhedspace.com</a></p>
+    </div><!-- // end #footer -->
+</body>
+</html>
