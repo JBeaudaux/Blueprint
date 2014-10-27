@@ -31,10 +31,17 @@
 \title{CLIMAX: Local medium access control adaptations for global efficiency}
 % Climax : Cross-layer information for local MAC layer adaptations.
 
-\author{Julien Beaudaux, Yuming Jiang% <-this % stops a space
-\IEEEcompsocitemizethanks{\IEEEcompsocthanksitem J. Beaudaux and Y. Jiang are with the Department of Telematics, Norwegian University of Science and Technology (NTNU), Trondheim, Norway.\protect\\}% <-this % stops an unwanted space
+%\author{Julien Beaudaux, Yuming Jiang% <-this % stops a space
+%\IEEEcompsocitemizethanks{\IEEEcompsocthanksitem J. Beaudaux and Y. Jiang are with the Department of Telematics, Norwegian University of Science and Technology (NTNU), Trondheim, Norway.\protect\\}% <-this % stops an unwanted space
 %\thanks{Manuscript received April 19, 2005; revised December 27, 2012.}
-}
+%}
+
+\author{
+    \IEEEauthorblockN{Julien Beaudaux\IEEEauthorrefmark{2} and Yuming Jiang\IEEEauthorrefmark{3}\\}
+    
+    \IEEEauthorblockA{\IEEEauthorrefmark{2} The Blue print project, Strasbourg, France\\ julienbeaudaux@gmail.com\\}
+    \IEEEauthorblockA{\IEEEauthorrefmark{3}Norwegian University of Science and Technology (NTNU), Trondheim, Norway	\\ jiang@item.ntnu.no	\\}
+    }
 
 % The paper headers
 \markboth{}%
@@ -318,8 +325,37 @@ The performance model on which the CLIMAX framework relies to determine the new 
 \label{results}
 
 In this section, we present the performances of the CLIMAX framework. All the provided results were obtained via simulation campaigns carried out using the Cooja simulator \cite{?}.
-The CLIMAX source code used in our evaluation campaign is available at \cite{?} for cross validation.
+The CLIMAX source code used in our evaluation campaign is openly available for cross validation\footnote{CLIMAX Git repository:\\ github.com/JBeaudaux/Blueprint/tree/master/Domotic/CLIMAX}.
 %\subsection{Evaluation setup}
+
+\begin{table}[htb]
+	\begin{tabular}{c | c}
+	\\
+	\textbf{Parameters} & \textbf{Simulation value} \\
+	\hline\hline \\
+	Node spacing & $8$ meters \\
+	Duration & $35$ minutes / $2100$ seconds \\
+	Radio propagation & Multi-path ray-tracer medium\\
+	MAC model & X-MAX \cite{bya06xmac}, Contiki-MAC \cite{?}\\
+	Duty-cycle & $64ms$, $125ms$, $250ms$, $500ms$ and $1s$\\
+	Maximum retries & $3$, $XXms$ between attempts\\
+	Payload size & $10Bytes$ (+ $6Bytes$ MAC header)\\
+	Routing model & Sink-rooted Gradient\\
+	Application model & CBR (1, 2 or 5pkts/minute)\\
+	\hline \\
+	\textbf{Hardware parameter} & \textbf{Simulation value} \\
+	\hline \hline \\
+	Node type & Zoloteria Z1 mote\\
+	Radio model & Omnidirectional CC2420\\
+	Modulation model & O-QPSK\\
+	Transmission power & $-10dBm$\\
+	\hline
+	\end{tabular}
+	\vspace{0.5cm}
+	\caption{Simulation setup}
+	\label{tableSetup}
+\end{table}
+
 
 \subsection{Expected local performance model}
 
@@ -337,7 +373,7 @@ To provide our implementation of the CLIMAX framework with such default values, 
 % Think about X-MAC results
 
 \bibliographystyle{ieeetr}
-\bibliography{autoconf}
+\bibliography{CLIMAX}
 
 %\begin{thebibliography}{0}
 %
